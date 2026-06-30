@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinh Phục Thử Thách Kim Loại - Trắc Nghiệm Hóa Học</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --primary-dark: #FFA500;
+            --primary-light: #FFF8DC;
+            --text-color: #2c3e50;
+            --bg-color: #fcf8e3;
+            --card-bg: #ffffff;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: #333;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .sticky-bar {
+            background: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            font-weight: bold;
+            position: sticky;
+            top: 110px;
+            z-index: 999;
+        }
+
+        .timer-box {
+            background-color: #333;
+            color: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            background: var(--primary-color);
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 2rem 0 1rem 0;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-shadow: 3px 3px 0px #333;
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary-color);
+            transition: transform 0.2s;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: var(--primary-light);
+            border-color: var(--primary-color);
+        }
+
+        .option-label input {
+            margin-right: 15px;
+            transform: scale(1.2);
+            accent-color: var(--primary-dark);
+        }
+
+        /* Đúng sai table layout */
+        .tf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .tf-table th, .tf-table td {
+            border: 1px solid #eee;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .tf-table th {
+            background-color: #f9f9f9;
+        }
+
+        .tf-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: #333;
+            border: none;
+            padding: 1rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+            transition: all 0.2s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Thống kê kết quả */
+        #result-zone {
+            display: none;
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border: 3px solid var(--primary-color);
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin: 1rem 0;
+        }
+
+        /* Trạng thái đáp án sau khi nộp */
+        .correct-ans {
+            background-color: #d4edda !important;
+            border-color: var(--success-color) !important;
+            color: #155724;
+        }
+
+        .wrong-ans {
+            background-color: #f8d7da !important;
+            border-color: var(--error-color) !important;
+            color: #721c24;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        .feedback.correct { color: var(--success-color); }
+        .feedback.wrong { color: var(--error-color); }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.6rem; }
+            .sticky-bar { top: 85px; flex-direction: column; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fas fa-atom"></i> Chinh Phục Thử Thách Kim Loại</h1>
+        <p>Hệ thống trắc nghiệm Hóa học Thông minh & Trực quan</p>
+    </header>
+
+    <div class="sticky-bar">
+        <div><i class="fas fa-tasks"></i> Tổng số câu hỏi: 45 Câu (35 MCQ + 10 Đúng/Sai)</div>
+        <div class="timer-box"><i class="fas fa-clock"></i> Thời gian: <span id="countdown">30:00</span></div>
+    </div>
+
+    <div class="container">
+        
+        <div id="result-zone">
+            <h2><i class="fas fa-trophy"></i> KẾT QUẢ BÀI LÀM CỦA BẠN</h2>
+            <div class="score-display" id="score-text">0 / 10 Điểm</div>
+            <p id="performance-comment">Hãy cùng kiểm tra lại đáp án chi tiết bên dưới nhé!</p>
+        </div>
+
+        <form id="quiz-form">
+            <div class="section-title">PHẦN 1: TRẮC NGHIỆM 4 LỰA CHỌN</div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="A">
+                <div class="question-text">Câu 1: Kết luận nào sau đây không đúng?</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q1" value="A"> A. Kim loại dẻo nhất là sodium.</label>
+                    <label class="option-label"><input type="radio" name="q1" value="B"> B. Kim loại có nhiệt độ nóng chảy thấp nhất là thủy ngân.</label>
+                    <label class="option-label"><input type="radio" name="q1" value="C"> C. Kim loại có nhiệt độ nóng chảy cao nhất là tungsten.</label>
+                    <label class="option-label"><input type="radio" name="q1" value="D"> D. Kim loại dẫn điện tốt nhất là bạc.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 2: Các kim loại nào sau đây tác dụng được với dung dịch HCl?</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q2" value="A"> A. Au, Mg.</label>
+                    <label class="option-label"><input type="radio" name="q2" value="B"> B. Al, Fe.</label>
+                    <label class="option-label"><input type="radio" name="q2" value="C"> C. Zn, Ag.</label>
+                    <label class="option-label"><input type="radio" name="q2" value="D"> D. Cu, Na.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="A">
+                <div class="question-text">Câu 3: Phương trình hóa học khi cho Zn phản ứng với hơi nước ở nhiệt độ cao là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q3" value="A"> A. Zn + H2O → ZnO + H2.</label>
+                    <label class="option-label"><input type="radio" name="q3" value="B"> B. Zn + H2O → ZnOH.</label>
+                    <label class="option-label"><input type="radio" name="q3" value="C"> C. Zn + H2O → Zn(OH)2.</label>
+                    <label class="option-label"><input type="radio" name="q3" value="D"> D. Zn + H2O → ZnO2 + H2.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="D">
+                <div class="question-text">Câu 4: Kim loại nhôm bị hòa tan bởi H2SO4 loãng, thu được muối sulfate và khí hydrogen. Phản ứng mô tả hiện tượng trên là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q4" value="A"> A. 2Al + H2SO4 → Al2(SO4)3 + H2.</label>
+                    <label class="option-label"><input type="radio" name="q4" value="B"> B. 2Al + H2SO4 → Al2SO4 + H2.</label>
+                    <label class="option-label"><input type="radio" name="q4" value="C"> C. Al + 3H2SO4 → Al(SO4)3 + H2.</label>
+                    <label class="option-label"><input type="radio" name="q4" value="D"> D. 2Al + 3H2SO4 → Al2(SO4)3 + 3H2.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="D">
+                <div class="question-text">Câu 5: Acid H2SO4 loãng phản ứng với tất cả các chất trong dãy nào dưới đây?</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q5" value="A"> A. FeCl3, MgO, Cu, Ca(OH)2.</label>
+                    <label class="option-label"><input type="radio" name="q5" value="B"> B. NaOH, CuO, Ag, Zn.</label>
+                    <label class="option-label"><input type="radio" name="q5" value="C"> C. Mg(OH)2, CaO, K2SO3, SO2.</label>
+                    <label class="option-label"><input type="radio" name="q5" value="D"> D. Al, Al2O3, Fe(OH)3, BaCl2.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="A">
+                <div class="question-text">Câu 6: Cho phản ứng Zn + CuSO4 → muối X + kim loại Y. X là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q6" value="A"> A. ZnSO4.</label>
+                    <label class="option-label"><input type="radio" name="q6" value="B"> B. CuSO4.</label>
+                    <label class="option-label"><input type="radio" name="q6" value="C"> C. Cu.</label>
+                    <label class="option-label"><input type="radio" name="q6" value="D"> D. Zn.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 7: Chất có ánh kim là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q7" value="A"> A. thủy tinh.</label>
+                    <label class="option-label"><input type="radio" name="q7" value="B"> B. bạc.</label>
+                    <label class="option-label"><input type="radio" name="q7" value="C"> C. gỗ.</label>
+                    <label class="option-label"><input type="radio" name="q7" value="D"> D. giấy.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 8: Ngâm một viên kẽm sạch trong dung dịch CuSO4. Câu trả lời nào sau đây là đúng nhất cho hiện tượng quan sát được?</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q8" value="A"> A. Không có hiện tượng nào xảy ra.</label>
+                    <label class="option-label"><input type="radio" name="q8" value="B"> B. Một phần viên kẽm bị hòa tan, có một lớp màu đỏ bám ngoài viên kẽm và màu xanh lam của dung dịch nhạt dần.</label>
+                    <label class="option-label"><input type="radio" name="q8" value="C"> C. Không có chất mới nào sinh ra, chỉ có một phần viên kẽm bị hòa tan.</label>
+                    <label class="option-label"><input type="radio" name="q8" value="D"> D. Kim loại đồng màu đỏ bám ngoài viên kẽm, viên kẽm không bị hòa tan.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="C">
+                <div class="question-text">Câu 9: Thả một mảnh nhôm vào ống nghiệm chứa dung dịch CuSO4. Hiện tượng xảy ra là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q9" value="A"> A. không có phản ứng.</label>
+                    <label class="option-label"><input type="radio" name="q9" value="B"> B. có chất rắn màu trắng bám ngoài lá nhôm, màu xanh của dung dịch CuSO4 nhạt dần.</label>
+                    <label class="option-label"><input type="radio" name="q9" value="C"> C. có chất rắn màu đỏ bám ngoài lá nhôm, màu xanh của dung dịch CuSO4 nhạt dần.</label>
+                    <label class="option-label"><input type="radio" name="q9" value="D"> D. có chất khí bay ra, dung dịch không đổi màu.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="C">
+                <div class="question-text">Câu 10: Một bạn học sinh đã đổ nhầm dung dịch iron (II) sulfate vào lọ chứa sẵn dung dịch zinc sulfate. Để thu được dung dịch chứa duy nhất muối zinc sulfate, em dùng kim loại:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q10" value="A"> A. Cu.</label>
+                    <label class="option-label"><input type="radio" name="q10" value="B"> B. Fe.</label>
+                    <label class="option-label"><input type="radio" name="q10" value="C"> C. Zn.</label>
+                    <label class="option-label"><input type="radio" name="q10" value="D"> D. Al.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 11: Cho lá nhôm vào dung dịch acid HCl có dư thu được 0,15 mol khí hydrogen. Khối lượng nhôm đã phản ứng là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q11" value="A"> A. 1,80 g.</label>
+                    <label class="option-label"><input type="radio" name="q11" value="B"> B. 2,70 g.</label>
+                    <label class="option-label"><input type="radio" name="q11" value="C"> C. 4,05 g.</label>
+                    <label class="option-label"><input type="radio" name="q11" value="D"> D. 5,40 g.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="D">
+                <div class="question-text">Câu 12: Cho hỗn hợp bột gồm Al, Fe, Mg và Cu vào dung dịch HCl dư, sau phản ứng thu được chất rắn T không tan. Vậy T là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q12" value="A"> A. Al.</label>
+                    <label class="option-label"><input type="radio" name="q12" value="B"> B. Fe.</label>
+                    <label class="option-label"><input type="radio" name="q12" value="C"> C. Mg.</label>
+                    <label class="option-label"><input type="radio" name="q12" value="D"> D. Cu.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="C">
+                <div class="question-text">Câu 13: Trong hợp chất oxide của kim loại A thì oxygen chiếm 17,02% theo khối lượng. Kim loại A là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q13" value="A"> A. Cu.</label>
+                    <label class="option-label"><input type="radio" name="q13" value="B"> B. Zn.</label>
+                    <label class="option-label"><input type="radio" name="q13" value="C"> C. K.</label>
+                    <label class="option-label"><input type="radio" name="q13" value="D"> D. Na.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="D">
+                <div class="question-text">Câu 14: Để oxi hóa hoàn toàn một kim loại R thành oxide phải dùng một lượng oxygen bằng 40% lượng kim loại đã dùng. R là kim loại nào sau đây?</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q14" value="A"> A. Fe.</label>
+                    <label class="option-label"><input type="radio" name="q14" value="B"> B. Al.</label>
+                    <label class="option-label"><input type="radio" name="q14" value="C"> C. Mg.</label>
+                    <label class="option-label"><input type="radio" name="q14" value="D"> D. Ca.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 15: Hòa tan 5,1g oxide của một kim loại hóa trị III bằng dung dịch HCl, số mol acid cần dùng là 0,3 mol. Công thức phân tử của oxide đó là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q15" value="A"> A. Fe2O3.</label>
+                    <label class="option-label"><input type="radio" name="q15" value="B"> B. Al2O3.</label>
+                    <label class="option-label"><input type="radio" name="q15" value="C"> C. Cr2O3.</label>
+                    <label class="option-label"><input type="radio" name="q15" value="D"> D. FeO.</label>
+                </div>
+            </div>
+
+            <div class="section-title">NHẬN BIẾT & THÔNG HIỂU & VẬN DỤNG</div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 16: Kim loại dẻo nhất là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q16" value="A"> A. bạc.</label>
+                    <label class="option-label"><input type="radio" name="q16" value="B"> B. vàng.</label>
+                    <label class="option-label"><input type="radio" name="q16" value="C"> C. tungsten.</label>
+                    <label class="option-label"><input type="radio" name="q16" value="D"> D. thủy ngân.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="A">
+                <div class="question-text">Câu 17: Kim loại dẫn điện tốt nhất là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q17" value="A"> A. bạc.</label>
+                    <label class="option-label"><input type="radio" name="q17" value="B"> B. vàng.</label>
+                    <label class="option-label"><input type="radio" name="q17" value="C"> C. tungsten.</label>
+                    <label class="option-label"><input type="radio" name="q17" value="D"> D. thủy ngân.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="A">
+                <div class="question-text">Câu 18: Kim loại dẫn nhiệt tốt nhất là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q18" value="A"> A. bạc.</label>
+                    <label class="option-label"><input type="radio" name="q18" value="B"> B. vàng.</label>
+                    <label class="option-label"><input type="radio" name="q18" value="C"> C. tungsten.</label>
+                    <label class="option-label"><input type="radio" name="q18" value="D"> D. thủy ngân.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="C">
+                <div class="question-text">Câu 19: Kim loại có nhiệt độ nóng chảy cao nhất là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q19" value="A"> A. bạc.</label>
+                    <label class="option-label"><input type="radio" name="q19" value="B"> B. vàng.</label>
+                    <label class="option-label"><input type="radio" name="q19" value="C"> C. tungsten.</label>
+                    <label class="option-label"><input type="radio" name="q19" value="D"> D. thủy ngân.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="D">
+                <div class="question-text">Câu 20: Kim loại có nhiệt độ nóng chảy thấp nhất là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q20" value="A"> A. bạc.</label>
+                    <label class="option-label"><input type="radio" name="q20" value="B"> B. vàng.</label>
+                    <label class="option-label"><input type="radio" name="q20" value="C"> C. tungsten.</label>
+                    <label class="option-label"><input type="radio" name="q20" value="D"> D. thủy ngân.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="C">
+                <div class="question-text">Câu 21: Kim loại tác dụng với ______ tạo thành oxide.</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q21" value="A"> A. hydrogen.</label>
+                    <label class="option-label"><input type="radio" name="q21" value="B"> B. chlorine.</label>
+                    <label class="option-label"><input type="radio" name="q21" value="C"> C. oxygen.</label>
+                    <label class="option-label"><input type="radio" name="q21" value="D"> D. sodium.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 22: Kim loại tác dụng với ______ tạo thành muối.</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q22" value="A"> A. kim loại.</label>
+                    <label class="option-label"><input type="radio" name="q22" value="B"> B. chlorine.</label>
+                    <label class="option-label"><input type="radio" name="q22" value="C"> C. phi kim.</label>
+                    <label class="option-label"><input type="radio" name="q22" value="D"> D. nhôm.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="A">
+                <div class="question-text">Câu 23: Hầu hết kim loại không tác dụng với:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q23" value="A"> A. khí hiếm.</label>
+                    <label class="option-label"><input type="radio" name="q23" value="B"> B. dung dịch acid.</label>
+                    <label class="option-label"><input type="radio" name="q23" value="C"> C. dung dịch muối.</label>
+                    <label class="option-label"><input type="radio" name="q23" value="D"> D. phi kim.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 24: Sản phẩm của phản ứng giữa kim loại và khí oxygen là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q24" value="A"> A. acid.</label>
+                    <label class="option-label"><input type="radio" name="q24" value="B"> B. oxide.</label>
+                    <label class="option-label"><input type="radio" name="q24" value="C"> C. base.</label>
+                    <label class="option-label"><input type="radio" name="q24" value="D"> D. muối.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="D">
+                <div class="question-text">Câu 25: Sản phẩm của phản ứng giữa kim loại với phi kim (trừ oxygen) là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q25" value="A"> A. oxide.</label>
+                    <label class="option-label"><input type="radio" name="q25" value="B"> B. base.</label>
+                    <label class="option-label"><input type="radio" name="q25" value="C"> C. acid.</label>
+                    <label class="option-label"><input type="radio" name="q25" value="D"> D. muối.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="A">
+                <div class="question-text">Câu 26: Nung nóng 12,8g đồng (Cu) ngoài không khí một thời gian thu được 14,4g chất rắn gồm CuO và Cu dư. Hiệu suất của phản ứng oxi hóa đồng là bao nhiêu?</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q26" value="A"> A. 50%.</label>
+                    <label class="option-label"><input type="radio" name="q26" value="B"> B. 60%.</label>
+                    <label class="option-label"><input type="radio" name="q26" value="C"> C. 75%.</label>
+                    <label class="option-label"><input type="radio" name="q26" value="D"> D. 80%.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 27: Cho một cây đinh sắt (Fe) tác dụng hoàn toàn với dung dịch HCl dư. Sau phản ứng thu được 4,958L khí hydrogen (ở điều kiện chuẩn, tương ứng với 0,2mol). Khối lượng đinh sắt đã phản ứng là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q27" value="A"> A. 5,6g.</label>
+                    <label class="option-label"><input type="radio" name="q27" value="B"> B. 11,2g.</label>
+                    <label class="option-label"><input type="radio" name="q27" value="C"> C. 16,8g.</label>
+                    <label class="option-label"><input type="radio" name="q27" value="D"> D. 22,4g.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 28: Hòa tan hoàn toàn 4,8g kim loại Magiê (Mg) vào 100g dung dịch HCl (vừa đủ). Khối lượng dung dịch thu được sau phản ứng là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q28" value="A"> A. 104,8g.</label>
+                    <label class="option-label"><input type="radio" name="q28" value="B"> B. 104,4g.</label>
+                    <label class="option-label"><input type="radio" name="q28" value="C"> C. 100,0g.</label>
+                    <label class="option-label"><input type="radio" name="q28" value="D"> D. 104,0g.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 29: Hòa tan hoàn toàn 10,2g oxide của một kim loại hóa trị III (R2O3) bằng dung dịch HCl loãng, số mol acid cần dùng vừa đủ là 0,6mol. Công thức phân tử của oxide là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q29" value="A"> A. Fe2O3.</label>
+                    <label class="option-label"><input type="radio" name="q29" value="B"> B. Al2O3.</label>
+                    <label class="option-label"><input type="radio" name="q29" value="C"> C. Cr2O3.</label>
+                    <label class="option-label"><input type="radio" name="q29" value="D"> D. MgO.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="A">
+                <div class="question-text">Câu 30: Cho thanh kẽm (Zn) có khối lượng ban đầu 20g vào dung dịch chứa Cu(NO3)2. Sau một thời gian phản ứng, cân lại thấy khối lượng thanh giảm 1% so với ban đầu. Khối lượng Cu đã bám vào thanh kẽm là:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q30" value="A"> A. 1,28g.</label>
+                    <label class="option-label"><input type="radio" name="q30" value="B"> B. 0,64g.</label>
+                    <label class="option-label"><input type="radio" name="q30" value="C"> C. 1,30g.</label>
+                    <label class="option-label"><input type="radio" name="q30" value="D"> D. 0,20g.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 31 (NB-C7): Kim loại nào sau đây phản ứng mạnh với nước ở điều kiện thường để giải phóng khí hydrogen?</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q31" value="A"> A. Kali (K).</label>
+                    <label class="option-label"><input type="radio" name="q31" value="B"> B. Đồng (Cu).</label>
+                    <label class="option-label"><input type="radio" name="q31" value="C"> C. Vàng (Au).</label>
+                    <label class="option-label"><input type="radio" name="q31" value="D"> D. Sắt (Fe).</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="D">
+                <div class="question-text">Câu 32 (NB-C8): Kim loại nào sau đây không phản ứng với dung dịch HCl và H2SO4 loãng?</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q32" value="A"> A. Nhôm (Al).</label>
+                    <label class="option-label"><input type="radio" name="q32" value="B"> B. Sắt (Fe).</label>
+                    <label class="option-label"><input type="radio" name="q32" value="C"> C. Kẽm (Zn).</label>
+                    <label class="option-label"><input type="radio" name="q32" value="D"> D. Đồng (Cu).</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="C">
+                <div class="question-text">Câu 33 (NB-C10): Ứng dụng phổ biến nhất của nhôm (Al) trong gia đình nhờ vào tính dẫn nhiệt tốt là làm:</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q33" value="A"> A. Lõi dây điện.</label>
+                    <label class="option-label"><input type="radio" name="q33" value="B"> B. Đồ trang sức cao cấp.</label>
+                    <label class="option-label"><input type="radio" name="q33" value="C"> C. Xoong, nồi, chảo.</label>
+                    <label class="option-label"><input type="radio" name="q33" value="D"> D. Cột thu lôi chống sét.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="C">
+                <div class="question-text">Câu 34 (NB-C14): Khi cho dây sắt đốt nóng tác dụng với khí chlorine (Cl2), sản phẩm muối thu được chứa sắt có hóa trị mấy?</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q34" value="A"> A. Hóa trị I.</label>
+                    <label class="option-label"><input type="radio" name="q34" value="B"> B. Hóa trị II.</label>
+                    <label class="option-label"><input type="radio" name="q34" value="C"> C. Hóa trị III.</label>
+                    <label class="option-label"><input type="radio" name="q34" value="D"> D. Hóa trị IV.</label>
+                </div>
+            </div>
+
+            <div class="quiz-card" data-qtype="mcq" data-ans="B">
+                <div class="question-text">Câu 35 (TH-C20): Kim loại nào sau đây có tính chất đặc biệt, vừa tác dụng được với dung dịch acid loãng HCl lại vừa tác dụng được với dung dịch base NaOH?</div>
+                <div class="options-container">
+                    <label class="option-label"><input type="radio" name="q35" value="A"> A. Sắt (Fe).</label>
+                    <label class="option-label"><input type="radio" name="q35" value="B"> B. Nhôm (Al).</label>
+                    <label class="option-label"><input type="radio" name="q35" value="C"> C. Đồng (Cu).</label>
+                    <label class="option-label"><input type="radio" name="q35" value="D"> D. Bạc (Ag).</label>
+                </div>
+            </div>
+
+
+            <div class="section-title">PHẦN 2: TRẮC NGHIỆM ĐÚNG/SAI</div>
+
+            <div class="quiz-card" data-qtype="tf" data-ans='{"a":"S","b":"Đ","c":"Đ","d":"Đ"}'>
+                <div class="question-text">Câu 1: Xem xét các tính chất vật lý của các kim loại thông dụng trong đời sống và kỹ thuật:</div>
+                <table class="tf-table">
+                    <tr>
+                        <td>a) Tungsten (W) được dùng làm sợi đốt bóng đèn nhờ khả năng dẫn điện tốt nhất trong các kim loại.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf1_a" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf1_a" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>b) Vàng (Au) có tính dẻo rất cao nên có thể cán thành những lá siêu mỏng.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf1_b" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf1_b" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>c) Thủy ngân (Hg) ở điều kiện thường có thể dùng trong nhiệt kế, áp kế vì nó ở thể lỏng.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf1_c" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf1_c" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>d) Bạc (Ag) là kim loại dẫn nhiệt tốt nhất nhưng ít được dùng làm xoong nồi do giá thành cao.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf1_d" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf1_d" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="quiz-card" data-qtype="tf" data-ans='{"a":"S","b":"Đ","c":"Đ","d":"Đ"}'>
+                <div class="question-text">Câu 2: Khi đánh giá về ứng dụng thực tế của kim loại dựa trên tính chất hóa học và vật lý của chúng:</div>
+                <table class="tf-table">
+                    <tr>
+                        <td>a) Nhôm (Al) thích hợp làm xoong, nồi vì vừa dẫn nhiệt tốt lại không bị ăn mòn bởi các dung dịch kiềm mạnh như NaOH.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf2_a" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf2_a" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>b) Đồng (Cu) được dùng làm lõi dây điện và cột thu lôi vì có tính dẫn điện rất tốt.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf2_b" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf2_b" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>c) Thép (hợp kim của sắt) được dùng nhiều trong xây dựng, cầu đường vì có độ bền cơ học cao.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf2_c" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf2_c" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>d) Vàng (Au) làm đồ trang sức vì có ánh kim lấp lánh và rất bền, không bị han gỉ bởi không khí ẩm.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf2_d" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf2_d" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="quiz-card" data-qtype="tf" data-ans='{"a":"Đ","b":"S","c":"S","d":"S"}'>
+                <div class="question-text">Câu 3: Khảo sát tính chất hóa học của các kim loại quý như Bạc (Ag) và Vàng (Au):</div>
+                <table class="tf-table">
+                    <tr>
+                        <td>a) Khi để lâu ngoài không khí, vàng vẫn giữ được độ sáng bóng vì vàng trơ về mặt hóa học với oxygen.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf3_a" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf3_a" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>b) Sắt (Fe) có hoạt động hóa học yếu hơn vàng (Au).</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf3_b" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf3_b" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>c) Kim loại bạc (Ag) tan nhanh trong dung dịch HCl loãng giải phóng khí H2.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf3_c" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf3_c" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>d) Vàng (Au) tác dụng mạnh với hơi nước ở nhiệt độ cao tạo thành oxide kim loại tương ứng.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf3_d" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf3_d" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="quiz-card" data-qtype="tf" data-ans='{"a":"Đ","b":"S","c":"Đ","d":"Đ"}'>
+                <div class="question-text">Câu 4: Tiến hành thí nghiệm cho các lá kim loại riêng biệt tiếp xúc với các hóa chất khác nhau ở điều kiện thường:</div>
+                <table class="tf-table">
+                    <tr>
+                        <td>a) Kim loại Kali (K) tác dụng mãnh liệt với nước tạo dung dịch kiềm và giải phóng khí hydrogen.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf4_a" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf4_a" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>b) Kim loại Đồng (Cu) phản ứng với dung dịch H2SO4 loãng giải phóng khí H2.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf4_b" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf4_b" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>c) Kim loại Nhôm (Al) và Sắt (Fe) bị thụ động hóa khi ngâm vào dung dịch H2SO4 đặc, nguội.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf4_c" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf4_c" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>d) Các kim loại gồm Fe, Cu, Ag, Al, Mg đều trơ và không tan trong nước ở nhiệt độ thường.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf4_d" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf4_d" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="quiz-card" data-qtype="tf" data-ans='{"a":"Đ","b":"Đ","c":"Đ","d":"M"}'>
+                <div class="question-text">Câu 5: Cho một lá đồng (Cu) có khối lượng 10g vào 200mL dung dịch silver nitrate (AgNO3) 0,2M. Sau một thời gian khối lượng thanh tăng thành 11,52g.</div>
+                <table class="tf-table">
+                    <tr>
+                        <td>a) Số mol AgNO3 ban đầu trong dung dịch là 0,04mol.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf5_a" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf5_a" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>b) Số mol Cu đã tham gia phản ứng là 0,02mol.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf5_b" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf5_b" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>c) Sau phản ứng, toàn bộ lượng AgNO3 ban đầu đã phản ứng hết.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf5_c" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf5_c" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>d) Nồng độ mol của muối Cu(NO3)2 thu được trong dung dịch sau phản ứng là 0,1M.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf5_d" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf5_d" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="quiz-card" data-qtype="tf" data-ans='{"a":"Đ","b":"S","c":"Đ","d":"Đ"}'>
+                <div class="question-text">Câu 6: Một mẫu hợp kim đồng (Cu) bị lẫn tạp chất là Al và Fe. Cân 10g mẫu rồi cho tác dụng với 200mL dung dịch HCl 2M dư. Sau phản ứng chất rắn thu được là 8,9g.</div>
+                <table class="tf-table">
+                    <tr>
+                        <td>a) Khối lượng của đồng (Cu) tinh khiết có trong mẫu hợp kim ban đầu là 8,9g.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf6_a" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf6_a" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>b) Tổng số mol HCl đã tham gia phản ứng với tạp chất nhôm và sắt là 0,06mol.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf6_b" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf6_b" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>c) Hàm lượng phần trăm về khối lượng của đồng trong mẫu hợp kim trên là 89%.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf6_c" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf6_c" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>d) Khối lượng của tạp chất nhôm và sắt tổng cộng là 1,1g.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf6_d" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf6_d" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="quiz-card" data-qtype="tf" data-ans='{"a":"Đ","b":"Đ","c":"Đ","d":"S"}'>
+                <div class="question-text">Câu 7: Hòa tan hoàn toàn 2,4g kim loại R (hóa trị I đến III) trong dung dịch HCl 2M thấy thể tích dung dịch acid cần dùng vừa đủ là 100 mL.</div>
+                <table class="tf-table">
+                    <tr>
+                        <td>a) Số mol acid HCl đã tham gia phản ứng là 0,2mol.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf7_a" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf7_a" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>b) Nếu kim loại R có hóa trị II thì số mol của kim loại R phản ứng là 0,1mol.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf7_b" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf7_b" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>c) Khối lượng nguyên tử (nguyên tử khối) của kim loại R được xác định là 24.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf7_c" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf7_c" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>d) Kim loại cần tìm chính là Sắt (Fe).</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf7_d" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf7_d" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="quiz-card" data-qtype="tf" data-ans='{"a":"S","b":"Đ","c":"Đ","d":"S"}'>
+                <div class="question-text">Câu 8: Thực hiện các phản ứng đẩy kim loại bằng cách ngâm các lá kim loại sạch vào các dung dịch muối:</div>
+                <table class="tf-table">
+                    <tr>
+                        <td>a) Ngâm lá kẽm (Zn) vào dung dịch CuSO4 thấy màu xanh lam của dung dịch đậm dần lên.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf8_a" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf8_a" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>b) Hiện tượng khi cho lá nhôm (Al) vào dung dịch CuSO4 là xuất hiện lớp kim loại màu đỏ bám trên bề mặt lá nhôm.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf8_b" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf8_b" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>c) Phản ứng giữa Zn và dung dịch CuSO4 sinh ra muối mới là ZnSO4 và kim loại đồng Cu.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf8_c" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf8_c" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>d) Ta có thể dùng thanh đồng (Cu) để đẩy sắt ra khỏi dung dịch muối FeSO4 ở điều kiện thường.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf8_d" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf8_d" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="quiz-card" data-qtype="tf" data-ans='{"a":"Đ","b":"Đ","c":"Đ","d":"S"}'>
+                <div class="question-text">Câu 9: Ngâm một lá kẽm (Zn) có khối lượng 5g vào 50mL dung dịch Cu(NO3)2 2M.</div>
+                <table class="tf-table">
+                    <tr>
+                        <td>a) Biểu thức độ biến thiên khối lượng thanh kim loại giảm là: m_giảm = m_Zn_tan - m_Cu_bám.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf9_a" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf9_a" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>b) Số mol Cu(NO3)2 tham gia phản ứng tối đa theo lượng dung dịch đã cho là 0,1mol.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf9_b" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf9_b" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>c) Khối lượng thanh kẽm sau khi làm khô giảm đi 0,1g so với khối lượng ban đầu.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf9_c" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf9_c" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>d) Khối lượng đồng sinh ra bám trên lá kẽm là 6,4g.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf9_d" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf9_d" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="quiz-card" data-qtype="tf" data-ans='{"a":"Đ","b":"Đ","c":"Đ","d":"Đ"}'>
+                <div class="question-text">Câu 10: Cho 12,1g hỗn hợp bột gồm hai kim loại Zn và Fe vào 200mL dung dịch CuSO4 0,5M. Sau phản ứng thu được chất rắn nặng 12,2g.</div>
+                <table class="tf-table">
+                    <tr>
+                        <td>a) Số mol CuSO4 tham gia phản ứng đẩy kim loại là 0,1mol.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf10_a" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf10_a" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>b) In phản ứng này, kim loại kẽm (Zn) sẽ tham gia phản ứng trước kim loại sắt (Fe).</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf10_b" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf10_b" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>c) Sau phản ứng, kim loại Zn đã bị hòa tan một phần hoặc hoàn toàn, còn Fe chưa phản ứng hoặc mới phản ứng một phần.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf10_c" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf10_c" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                    <tr>
+                        <td>d) Khối lượng kim loại đồng (Cu) được giải phóng và bám vào chất rắn là 6,4g.</td>
+                        <td><div class="tf-options">
+                            <label><input type="radio" name="tf10_d" value="Đ"> Đ</label>
+                            <label><input type="radio" name="tf10_d" value="S"> S</label>
+                        </div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <button type="button" class="btn-submit" onclick="submitQuiz()"><i class="fas fa-paper-plane"></i> NỘP BÀI VÀ XEM ĐÁP ÁN</button>
+        </form>
+
+    </div>
+
+    <script>
+        // Cài đặt đếm ngược 30 phút
+        let timeRemaining = 30 * 60;
+        const countdownElement = document.getElementById('countdown');
+
+        const timer = setInterval(() => {
+            let minutes = Math.floor(timeRemaining / 60);
+            let seconds = timeRemaining % 60;
+
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            countdownElement.textContent = `${minutes}:${seconds}`;
+
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                alert("Hết giờ làm bài! Hệ thống tự động nộp bài.");
+                submitQuiz();
+            }
+            timeRemaining--;
+        }, 1000);
+
+        function submitQuiz() {
+            clearInterval(timer);
+            let score = 0;
+            let totalQuestions = 0;
+
+            const cards = document.querySelectorAll('.quiz-card');
+
+            cards.forEach((card) => {
+                const type = card.getAttribute('data-qtype');
+                
+                if (type === 'mcq') {
+                    totalQuestions++;
+                    const corectAns = card.getAttribute('data-ans');
+                    const selected = card.querySelector('input[type="radio"]:checked');
+                    const options = card.querySelectorAll('.option-label');
+
+                    options.forEach(opt => {
+                        const val = opt.querySelector('input').value;
+                        if(val === corectAns) {
+                            opt.classList.add('correct-ans');
+                        }
+                    });
+
+                    if (selected) {
+                        if (selected.value === corectAns) {
+                            score++;
+                        } else {
+                            selected.parentElement.classList.add('wrong-ans');
+                        }
+                    }
+                } 
+                else if (type === 'tf') {
+                    const answers = JSON.parse(card.getAttribute('data-ans'));
+                    const rows = card.querySelectorAll('.tf-table tr');
+                    
+                    let subKeys = ['a', 'b', 'c', 'd'];
+                    subKeys.forEach((key, idx) => {
+                        totalQuestions++;
+                        const correctVal = answers[key];
+                        const selectedRadio = card.querySelector(`input[name="${card.querySelector('input').name.split('_')[0]}_${key}"]:checked`);
+                        
+                        if(selectedRadio) {
+                            if(selectedRadio.value === correctVal) {
+                                score++;
+                                selectedRadio.parentElement.style.color = 'green';
+                                selectedRadio.parentElement.style.fontWeight = 'bold';
+                            } else {
+                                selectedRadio.parentElement.style.color = 'red';
+                                selectedRadio.parentElement.style.fontWeight = 'bold';
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Hiển thị kết quả điểm số quy đổi hệ 10
+            const finalScore = ((score / totalQuestions) * 10).toFixed(2);
+            document.getElementById('result-zone').style.display = 'block';
+            document.getElementById('score-text').textContent = `${finalScore} / 10 Điểm (${score}/${totalQuestions} câu đúng)`;
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+
+            // Khóa các ô input không cho sửa đổi sau khi nộp
+            const allInputs = document.querySelectorAll('input');
+            allInputs.forEach(input => input.disabled = true);
+        }
+    </script>
+</body>
+</html>
